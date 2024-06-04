@@ -1,5 +1,12 @@
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
-
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  where,
+} from 'firebase/firestore';
 import { auth, db } from '../config/firebase-config';
 
 export const inboxMails = async (receiverEmail, subject, content, navigate) => {
@@ -14,6 +21,7 @@ export const inboxMails = async (receiverEmail, subject, content, navigate) => {
       sender: auth.currentUser.email,
       subject,
       content,
+      markAsRead: false,
     });
 
     if (navigate) {
@@ -61,4 +69,24 @@ export const getSentEmails = async senderEmail => {
     console.error('Error getting emails:', error);
     throw error;
   }
+};
+
+export const getSingleMailToRead = async id => {
+  try {
+    const emailDocRef = doc(db, 'Emails', id);
+    const emailDoc = await getDoc(emailDocRef);
+
+    if (emailDoc.exists()) {
+      return { id: emailDoc.id, ...emailDoc.data() };
+    } else {
+      throw new Error('No such document!');
+    }
+  } catch (err) {
+    console.error('Error getting mail:', err);
+    throw err;
+  }
+};
+
+export const updateEmail = () => {
+  console.log('updating');
 };

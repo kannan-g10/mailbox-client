@@ -8,6 +8,7 @@ import SentEmailLists from '../components/SentEmailLists';
 import ComposeEmail from '../components/ComposeEmail';
 import Header from '../components/Header';
 import Error from '../components/Error';
+import ReadEmail from '../components/ReadEmail';
 
 const UserRoutes = () => {
   return (
@@ -20,6 +21,7 @@ const UserRoutes = () => {
         <div className="col-span-5">
           <Routes>
             <Route path="/" element={<EmailList />} />
+            <Route path="/:id" element={<ReadEmail />} />
             <Route path="/delete-emails" element={<DeleteEmailLists />} />
             <Route path="/sent-emails" element={<SentEmailLists />} />
             <Route path="/compose-email" element={<ComposeEmail />} />
