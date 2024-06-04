@@ -5,6 +5,7 @@ import {
   getDoc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 import { auth, db } from '../config/firebase-config';
@@ -87,6 +88,12 @@ export const getSingleMailToRead = async id => {
   }
 };
 
-export const updateEmail = () => {
-  console.log('updating');
+export const updateEmail = async id => {
+  try {
+    const docRef = doc(db, 'Emails', id);
+    await updateDoc(docRef, { markAsRead: true });
+  } catch (err) {
+    console.error('Error getting mail:', err);
+    throw err;
+  }
 };

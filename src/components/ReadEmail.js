@@ -30,7 +30,7 @@ const ReadEmail = () => {
   }
 
   return (
-    <div className="flex justify-center items-center bg-zinc-100 h-[80vh]">
+    <div className="flex justify-center bg-zinc-100 h-[80vh] pb-32">
       <div className="w-1/2 bg-gray-300 rounded-lg p-5 m-5">
         <p className="font-medium text-xl text-ellipsis tracking-wide m-5">
           <span className="font-bold">Sender : </span>

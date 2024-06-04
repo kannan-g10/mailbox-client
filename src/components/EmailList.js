@@ -18,8 +18,8 @@ const EmailList = () => {
     setListEmails(data);
   };
 
-  const handleUpdate = () => {
-    updateEmail();
+  const handleUpdate = id => {
+    updateEmail(id);
   };
 
   useEffect(() => {
@@ -45,12 +45,23 @@ const EmailList = () => {
   }
 
   return (
-    <div className="bg-zinc-200 p-5">
+    <div className="bg-gray-200 p-5">
       {listEmails?.map(email => (
-        <Link to={`/${email.id}`} key={email.id} onClick={handleUpdate}>
-          <div className="flex items-center gap-4 m-3 bg-zinc-100 px-6 py-4 rounded-md cursor-pointer hover:bg-white">
-            {!email.markAsRead && (
+        <Link
+          to={`/${email.id}`}
+          key={email.id}
+          onClick={() => handleUpdate(email.id)}
+        >
+          <div
+            className={`flex items-center gap-4 m-2 ${(backGround =
+              email.markAsRead
+                ? 'bg-zinc-100'
+                : 'bg-zinc-300')} px-6 py-4 rounded-md cursor-pointer hover:bg-white`}
+          >
+            {!email.markAsRead ? (
               <GoDotFill color="crimson" size={25} className="mt-2" />
+            ) : (
+              <p className="px-4"></p>
             )}
             <p className="w-1/6 font-bold text-xl pr-4 text-center">
               {email.sender}
