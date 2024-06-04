@@ -57,7 +57,7 @@ const SentEmailLists = () => {
               className="w-2/4 h-10 px-5 pt-[0.30rem] text-lg"
               dangerouslySetInnerHTML={createMarkup(
                 email.content.length > 25
-                  ? `${email.content.slice(0, 25)}...`
+                  ? `${email.content.slice(0, 23)}...`
                   : email.content
               )}
             ></div>

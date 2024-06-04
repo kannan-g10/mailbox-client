@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -9,6 +10,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { auth, db } from '../config/firebase-config';
+import { Timestamp } from 'firebase/firestore';
 
 export const inboxMails = async (receiverEmail, subject, content, navigate) => {
   try {
@@ -23,6 +25,7 @@ export const inboxMails = async (receiverEmail, subject, content, navigate) => {
       subject,
       content,
       markAsRead: false,
+      createdAt: Timestamp.fromDate(new Date()),
     });
 
     if (navigate) {
@@ -41,14 +44,19 @@ export const getInboxMails = async receiverEmail => {
 
     const querySnapshot = await getDocs(q);
 
-    const emails = querySnapshot.docs.map(doc => ({
+    let emails = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
 
+    if (emails.length) {
+      emails = emails.sort(
+        (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()
+      );
+    }
     return emails;
   } catch (error) {
-    console.error('Error getting emails:', error);
+    console.error('Error getting inbox emails:', error);
     throw error;
   }
 };
@@ -60,14 +68,20 @@ export const getSentEmails = async senderEmail => {
 
     const querySnapshot = await getDocs(q);
 
-    const emails = querySnapshot.docs.map(doc => ({
+    let emails = querySnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
     }));
 
+    if (emails.length) {
+      emails = emails.sort(
+        (a, b) => b.createdAt.toMillis() - a.createdAt.toMillis()
+      );
+    }
+
     return emails;
   } catch (error) {
-    console.error('Error getting emails:', error);
+    console.error('Error getting sent emails:', error);
     throw error;
   }
 };
@@ -92,6 +106,17 @@ export const updateEmail = async id => {
   try {
     const docRef = doc(db, 'Emails', id);
     await updateDoc(docRef, { markAsRead: true });
+  } catch (err) {
+    console.error('Error While updating mail:', err);
+    throw err;
+  }
+};
+
+export const deleteMail = async id => {
+  try {
+    console.log(id);
+    const docRef = doc(db, 'Emails', id);
+    await deleteDoc(docRef);
   } catch (err) {
     console.error('Error getting mail:', err);
     throw err;
