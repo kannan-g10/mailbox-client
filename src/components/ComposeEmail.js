@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import ComposeEmailEditor from './ComposeEmailEditor';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { inboxMails } from '../helpers/inbox-helper';
 
 const ComposeEmail = () => {
@@ -9,12 +9,19 @@ const ComposeEmail = () => {
   const [content, setContent] = useState('');
   const [clearEditor, setClearEditor] = useState(false);
 
+  const navigate = useNavigate();
+
   const onChangeContent = body => {
     setContent(body);
   };
 
   const sendEmail = () => {
-    inboxMails(email, sub, content);
+    if (email === '' || sub === '' || content === '') {
+      console.error('All fields are mandatory!');
+      return;
+    }
+
+    inboxMails(email, sub, content, navigate);
 
     setEmail('');
     setSub('');
@@ -53,14 +60,12 @@ const ComposeEmail = () => {
           onChangeContent={onChangeContent}
           clearEditor={clearEditor}
         />
-        <Link to="/">
-          <button
-            className="bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-2 my-3 rounded-md"
-            onClick={sendEmail}
-          >
-            Send
-          </button>
-        </Link>
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-2 my-3 rounded-md"
+          onClick={sendEmail}
+        >
+          Send
+        </button>
       </div>
     </div>
   );
