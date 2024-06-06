@@ -1,7 +1,6 @@
 import {
   addDoc,
   collection,
-  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -116,7 +115,7 @@ export const deleteMail = async id => {
   try {
     console.log(id);
     const docRef = doc(db, 'Emails', id);
-    await deleteDoc(docRef);
+    await updateDoc(docRef, { receiver: '' });
   } catch (err) {
     console.error('Error getting mail:', err);
     throw err;
